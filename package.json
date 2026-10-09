@@ -1,0 +1,31 @@
+{
+  "name": "mychart-mcp",
+  "version": "0.1.0",
+  "description": "MCP server that lets Claude read and send Epic MyChart messages via browser automation",
+  "type": "module",
+  "bin": {
+    "mychart-mcp": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "start:http": "node dist/index.js --http",
+    "typecheck": "tsc --noEmit",
+    "smoke": "node scripts/smoke-test.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.1",
+    "express": "^5.1.0",
+    "playwright": "^1.56.1",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "@types/node": "^22.18.12",
+    "typescript": "^5.9.3"
+  }
+}

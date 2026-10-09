@@ -1,0 +1,16 @@
+import { Client } from "@modelcontextprotocol/sdk/client/index.js";
+import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
+const t = new StdioClientTransport({ command: "node", args: ["dist/index.js"], env: { ...process.env, MYCHART_PROFILE_DIR: "./profile-smoke" }, stderr: "inherit" });
+const c = new Client({ name: "e2e", version: "0" });
+await c.connect(t);
+const { tools } = await c.listTools();
+console.log("TOOLS:", tools.map(t => t.name).join(", "));
+const show = (r) => { const x = r.content[0]; return (x.type === "text" ? x.text : `[${x.type} ${x.data.length}b]`).slice(0, 700); };
+console.log("STATUS:", show(await c.callTool({ name: "mychart_status", arguments: {} })));
+console.log("LIST (logged out):", show(await c.callTool({ name: "mychart_list_messages", arguments: {} })));
+console.log("LOGIN:", show(await c.callTool({ name: "mychart_login", arguments: { username: "not-a-real-user-xyz", password: "wrongpass123" } })));
+const s = await c.callTool({ name: "mychart_snapshot", arguments: { max_text: 500 } });
+console.log("SNAPSHOT:", show(s));
+console.log("SCREENSHOT:", show(await c.callTool({ name: "mychart_screenshot", arguments: {} })));
+console.log("NAV OFFSITE:", show(await c.callTool({ name: "mychart_navigate", arguments: { path: "https://evil.example.com/x" } })));
+await c.close();
